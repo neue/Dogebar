@@ -1,4 +1,5 @@
 #import "ApplicationDelegate.h"
+#import "NSString+URLEncoding.h"
 #import "SBJson.h"
 
 @implementation ApplicationDelegate
@@ -29,26 +30,62 @@ void *kContextActivePanel = &kContextActivePanel;
 
 #pragma mark - NSApplicationDelegate
 
+- (NSDictionary *)geocode:(NSString *)locationText
+{
+    NSString *escapedLocationText = [locationText urlEncodeUsingEncoding:NSUTF8StringEncoding];
+    NSString *geoUrl = [NSString stringWithFormat:@"http://nominatim.openstreetmap.org/search?format=json&q=%@", escapedLocationText];
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:geoUrl]];
+    NSData *response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+    NSString *json_string = [[NSString alloc] initWithData:response encoding:NSUTF8StringEncoding];
+    SBJsonParser *parser = [[SBJsonParser alloc] init];
+    NSArray *data = [parser objectWithString:json_string];
+    
+    NSNumber *lat;
+    NSNumber *lon;
+    if ([data count] > 0) {
+        lat = [data[0] objectForKey:@"lat"];
+        lon = [data[0] objectForKey:@"lon"];
+    } else {
+        return NULL;
+    }
+    return @{@"lat": lat, @"lon":lon};
+}
+
+- (NSDictionary *)getWeatherFor:(NSDictionary *)locationDict
+{
+    // DarkSky API key from https://developer.darkskyapp.com/
+    NSString *apiKey = @"api_key";
+    
+    NSNumber *lat = [locationDict objectForKey:@"lat"];
+    NSNumber *lon = [locationDict objectForKey:@"lon"];
+    
+    NSString *wxUrl = [NSString stringWithFormat:@"https://api.forecast.io/forecast/%@/%0.4f,%0.4f",
+                       apiKey, [lat doubleValue], [lon doubleValue]];
+    NSLog(@"WX URL: %@", wxUrl);
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:wxUrl]];
+    NSData *response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+    NSString *json_string = [[NSString alloc] initWithData:response encoding:NSUTF8StringEncoding];
+    
+    SBJsonParser *parser = [[SBJsonParser alloc] init];
+    return [parser objectWithString:json_string];
+}
+
 - (void)applicationDidFinishLaunching:(NSNotification *)notification
 {
     // Install icon into the menu bar
     self.menubarController = [[MenubarController alloc] init];
     
-    NSNumber *latitude = @42.0320;
-    NSNumber *longitude = @-87.6752;
+    NSString *locationText = @"Evanston, IL";
     
-    // DarkSky API key from https://developer.darkskyapp.com/
-    NSString *apiKey = @"api_key";
+    NSDictionary *loc = [self geocode:locationText];
     
-    NSString *url = [NSString stringWithFormat:@"https://api.forecast.io/forecast/%@/%@,%@",
-                     apiKey, latitude, longitude];
-    NSLog(@"URL: %@", url);
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
-    NSData *response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
-    NSString *json_string = [[NSString alloc] initWithData:response encoding:NSUTF8StringEncoding];
+    if (loc == NULL) {
+        NSLog(@"Couldn't find %@", locationText);
+        return;
+    }
     
-    SBJsonParser *parser = [[SBJsonParser alloc] init];
-    NSDictionary *data = [parser objectWithString:json_string];
+    NSDictionary *data = [self getWeatherFor:loc];
+    
     NSDictionary *current = [data objectForKey:@"currently"];
     NSLog(@"%@ - %@F", [current objectForKey:@"summary"], [current objectForKey:@"temperature"]);
 }
