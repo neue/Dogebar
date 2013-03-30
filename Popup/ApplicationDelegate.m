@@ -1,4 +1,5 @@
 #import "ApplicationDelegate.h"
+#import "SBJson.h"
 
 @implementation ApplicationDelegate
 
@@ -32,6 +33,24 @@ void *kContextActivePanel = &kContextActivePanel;
 {
     // Install icon into the menu bar
     self.menubarController = [[MenubarController alloc] init];
+    
+    NSNumber *latitude = @42.0320;
+    NSNumber *longitude = @-87.6752;
+    
+    // DarkSky API key from https://developer.darkskyapp.com/
+    NSString *apiKey = @"api_key";
+    
+    NSString *url = [NSString stringWithFormat:@"https://api.forecast.io/forecast/%@/%@,%@",
+                     apiKey, latitude, longitude];
+    NSLog(@"URL: %@", url);
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+    NSData *response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+    NSString *json_string = [[NSString alloc] initWithData:response encoding:NSUTF8StringEncoding];
+    
+    SBJsonParser *parser = [[SBJsonParser alloc] init];
+    NSDictionary *data = [parser objectWithString:json_string];
+    NSDictionary *current = [data objectForKey:@"currently"];
+    NSLog(@"%@ - %@F", [current objectForKey:@"summary"], [current objectForKey:@"temperature"]);
 }
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
