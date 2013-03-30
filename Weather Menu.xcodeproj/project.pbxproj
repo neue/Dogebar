@@ -32,6 +32,7 @@
 		7117268F170768F700B3D37C /* SBJsonUTF8Stream.m in Sources */ = {isa = PBXBuildFile; fileRef = 7117267617075E4E00B3D37C /* SBJsonUTF8Stream.m */; };
 		71172690170768F700B3D37C /* SBJsonWriter.h in Sources */ = {isa = PBXBuildFile; fileRef = 7117267717075E4E00B3D37C /* SBJsonWriter.h */; };
 		71172691170768F700B3D37C /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7117267817075E4E00B3D37C /* SBJsonWriter.m */; };
+		711726961707800F00B3D37C /* NSString+URLEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 711726951707800F00B3D37C /* NSString+URLEncoding.m */; };
 		DD4F7C0913C30F9F00825C6E /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD4F7C0813C30F9F00825C6E /* Cocoa.framework */; };
 		DD4F7C1513C30F9F00825C6E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DD4F7C1413C30F9F00825C6E /* main.m */; };
 		DD4F7C1C13C30F9F00825C6E /* ApplicationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DD4F7C1B13C30F9F00825C6E /* ApplicationDelegate.m */; };
@@ -74,6 +75,8 @@
 		7117267617075E4E00B3D37C /* SBJsonUTF8Stream.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SBJsonUTF8Stream.m; sourceTree = "<group>"; };
 		7117267717075E4E00B3D37C /* SBJsonWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBJsonWriter.h; sourceTree = "<group>"; };
 		7117267817075E4E00B3D37C /* SBJsonWriter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SBJsonWriter.m; sourceTree = "<group>"; };
+		711726941707800F00B3D37C /* NSString+URLEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLEncoding.h"; sourceTree = "<group>"; };
+		711726951707800F00B3D37C /* NSString+URLEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+URLEncoding.m"; sourceTree = "<group>"; };
 		DD4F7C0413C30F9F00825C6E /* Weather Menu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Weather Menu.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD4F7C0813C30F9F00825C6E /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		DD4F7C0B13C30F9F00825C6E /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -183,6 +186,8 @@
 				DD4F7C2613C311DF00825C6E /* Controllers */,
 				DD4F7C3913C317EC00825C6E /* Views */,
 				DD4F7C0F13C30F9F00825C6E /* Supporting Files */,
+				711726941707800F00B3D37C /* NSString+URLEncoding.h */,
+				711726951707800F00B3D37C /* NSString+URLEncoding.m */,
 			);
 			name = Sources;
 			path = Popup;
@@ -350,6 +355,7 @@
 				DD4F7C3F13C318D600825C6E /* PanelController.m in Sources */,
 				DD4F7C4413C31BD200825C6E /* Panel.m in Sources */,
 				DD4F7C4713C3208500825C6E /* BackgroundView.m in Sources */,
+				711726961707800F00B3D37C /* NSString+URLEncoding.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
