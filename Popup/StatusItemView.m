@@ -5,6 +5,7 @@
 @synthesize statusItem = _statusItem;
 @synthesize image = _image;
 @synthesize alternateImage = _alternateImage;
+@synthesize text = _text;
 @synthesize isHighlighted = _isHighlighted;
 @synthesize action = _action;
 @synthesize target = _target;
@@ -35,11 +36,60 @@
     NSImage *icon = self.isHighlighted ? self.alternateImage : self.image;
     NSSize iconSize = [icon size];
     NSRect bounds = self.bounds;
-    CGFloat iconX = roundf((NSWidth(bounds) - iconSize.width) / 2);
+    CGFloat iconX = 0.0;
     CGFloat iconY = roundf((NSHeight(bounds) - iconSize.height) / 2);
     NSPoint iconPoint = NSMakePoint(iconX, iconY);
 
 	[icon drawAtPoint:iconPoint fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
+    
+    CGFloat textX = iconSize.width - 4;
+    CGFloat textY = iconY;
+    NSPoint textPoint = NSMakePoint(textX, textY);
+    
+    [self.text drawAtPoint:textPoint withAttributes:[self titleAttributes]];
+}
+
+- (NSColor *)titleForegroundColor {
+    if (self.isHighlighted) {
+        return [NSColor whiteColor];
+    }
+    else {
+        return [NSColor blackColor];
+    }
+}
+
+- (NSDictionary *)titleAttributes {
+    // Use default menu bar font size
+    NSFont *font = [NSFont menuBarFontOfSize:0];
+    
+    NSColor *foregroundColor = [self titleForegroundColor];
+    
+    return [NSDictionary dictionaryWithObjectsAndKeys:
+            font,            NSFontAttributeName,
+            foregroundColor, NSForegroundColorAttributeName,
+            nil];
+}
+
+- (NSRect)boundingRect {
+    NSRect textRect = [self.text boundingRectWithSize:NSMakeSize(1e100, 1e100)
+                                   options:0
+                                attributes:[self titleAttributes]];
+    return NSMakeRect(0, 0, NSWidth(textRect) + [self.image size].width, NSHeight(textRect));
+}
+
+- (void)setText:(NSString *)text {
+    if ([self.text isEqualToString:text]) {
+        return;
+    }
+    
+    _text = text;
+    NSLog(@"setText called with %@", text);
+    
+    NSRect newBounds = [self boundingRect];
+    int newWidth = newBounds.size.width;
+    [self.statusItem setLength:newWidth];
+    
+    [self setNeedsDisplay:TRUE];
 }
 
 #pragma mark -
