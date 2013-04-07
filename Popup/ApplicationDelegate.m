@@ -6,6 +6,7 @@
 
 @synthesize panelController = _panelController;
 @synthesize menubarController = _menubarController;
+@synthesize location = _location;
 
 #pragma mark -
 
@@ -75,19 +76,34 @@ void *kContextActivePanel = &kContextActivePanel;
     // Install icon into the menu bar
     self.menubarController = [[MenubarController alloc] init];
     
-    NSString *locationText = @"Evanston, IL";
+    NSString *locationText = @"Minneapolis, MN";
     
-    NSDictionary *loc = [self geocode:locationText];
+    self.location = [self geocode:locationText];
     
-    if (loc == NULL) {
+    if (self.location == NULL) {
         NSLog(@"Couldn't find %@", locationText);
         return;
     }
     
-    NSDictionary *data = [self getWeatherFor:loc];
+    self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:900.0
+                                                        target:self
+                                                      selector:@selector(updateWeatherData:)
+                                                      userInfo:nil
+                                                       repeats:YES];
+    
+    [self updateWeatherData:nil];
+}
+
+- (void)updateWeatherData:(NSTimer*)theTimer
+{
+    NSLog(@"Time tick");
+    
+    NSDictionary *data = [self getWeatherFor:self.location];
     
     NSDictionary *current = [data objectForKey:@"currently"];
     NSLog(@"%@ - %@F", [current objectForKey:@"summary"], [current objectForKey:@"temperature"]);
+    
+    _menubarController.statusItemView.text = [NSString stringWithFormat:@"%@°F", [current objectForKey:@"temperature"]];
 }
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
