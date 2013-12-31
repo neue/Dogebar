@@ -6,6 +6,7 @@
 @synthesize image = _image;
 @synthesize alternateImage = _alternateImage;
 @synthesize text = _text;
+@synthesize opacity = _opacity;
 @synthesize isHighlighted = _isHighlighted;
 @synthesize action = _action;
 @synthesize target = _target;
@@ -34,16 +35,18 @@
 	[self.statusItem drawStatusBarBackgroundInRect:dirtyRect withHighlight:self.isHighlighted];
     
     NSImage *icon = self.isHighlighted ? self.alternateImage : self.image;
+    
     NSSize iconSize = [icon size];
     NSRect bounds = self.bounds;
     CGFloat iconX = 0.0;
     CGFloat iconY = roundf((NSHeight(bounds) - iconSize.height) / 2);
     NSPoint iconPoint = NSMakePoint(iconX, iconY);
 
-	[icon drawAtPoint:iconPoint fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
-    
-    CGFloat textX = iconSize.width - 4;
-    CGFloat textY = iconY;
+	[icon drawAtPoint:iconPoint fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:self.opacity];
+
+
+    CGFloat textX = iconSize.width;
+    CGFloat textY = iconY + 1;
     NSPoint textPoint = NSMakePoint(textX, textY);
     
     [self.text drawAtPoint:textPoint withAttributes:[self titleAttributes]];
@@ -74,7 +77,7 @@
     NSRect textRect = [self.text boundingRectWithSize:NSMakeSize(1e100, 1e100)
                                    options:0
                                 attributes:[self titleAttributes]];
-    return NSMakeRect(0, 0, NSWidth(textRect) + [self.image size].width, NSHeight(textRect));
+    return NSMakeRect(0, 0, NSWidth(textRect) + [self.image size].width + 3, NSHeight(textRect));
 }
 
 - (void)setText:(NSString *)text {

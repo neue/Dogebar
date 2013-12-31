@@ -4,6 +4,7 @@
 @interface BackgroundView : NSView
 {
     NSInteger _arrowX;
+
 }
 
 @property (nonatomic, assign) NSInteger arrowX;

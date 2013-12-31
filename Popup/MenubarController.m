@@ -17,7 +17,8 @@
         _statusItemView = [[StatusItemView alloc] initWithStatusItem:statusItem];
         _statusItemView.image = [NSImage imageNamed:@"Status"];
         _statusItemView.alternateImage = [NSImage imageNamed:@"StatusHighlighted"];
-        _statusItemView.text = @"100°F";
+        _statusItemView.text = @"wow";
+        _statusItemView.opacity = 1.0;
         _statusItemView.action = @selector(togglePanel:);
     }
     return self;

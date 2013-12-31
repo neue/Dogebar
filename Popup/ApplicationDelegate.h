@@ -6,7 +6,10 @@
 @property (nonatomic, strong) MenubarController *menubarController;
 @property (nonatomic, strong, readonly) PanelController *panelController;
 @property NSTimer *updateTimer;
-@property NSDictionary *location;
+
+
+- (void)updateBalance:(NSTimer*)theTimer;
+
 
 - (IBAction)togglePanel:(id)sender;
 
